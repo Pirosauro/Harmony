@@ -1,0 +1,53 @@
+/**
+ * 1. Prevents columns from collapsing when empty.
+ */
+
+@mixin grid-build($grid_columns, $grid_gutter_width: 1%) {
+  @if type-of($grid_columns) != 'number' or round($grid_columns) != $grid_columns {
+    @warn("");
+  }
+  @elseif type-of($grid_gutter_width) != 'number' or unit($grid_gutter_width) != '%' {
+    @warn("");
+  }
+  @else{
+    $element_width:  (100% - ($grid_gutter_width * ($grid_columns + 1))) / $grid_columns;
+
+    @include grid_container;
+
+    %grid_cell {
+      margin-right: -100%;
+          position: relative;
+        min-height: 1px; /* 1 */
+             clear: none;
+             float: left;
+             width: 100% - ($grid_gutter_width * 2);
+             margin-left: $grid_gutter_width;
+    }
+
+    // Cells
+    @if $grid_columns > 1 {
+      @for $i from 1 through ($grid_columns - 1) {
+        #{&}--cell--#{$i} {
+          @extend %grid_cell;
+
+          width: ($element_width * $i) + ($grid_gutter_width * ($i - 1));
+        }
+      }
+    }
+
+    #{&}--cell--#{$grid_columns} {
+      @extend %grid_cell;
+    }
+
+    // Offset
+    @for $i from 1 through ($grid_columns - 1) {
+      #{&}--offset--#{$i} {
+        margin-left: ($element_width * $i) + ($grid_gutter_width * ($i + 1));
+      }
+    }
+
+    #{&}--break {
+      clear: left;
+    }
+  }
+}
