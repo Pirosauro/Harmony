@@ -1,27 +1,55 @@
+$grid_gutter_width: 1% !default;
+
+%grid_container {
+      width: 100%;
+  max-width: 100%;
+     margin: 0 auto;
+   position: relative;
+   overflow: visible !important;
+      clear: both;
+      *zoom: 1;
+
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
+
+  & & {
+    margin-left: 0 - $grid_gutter_width;
+  }
+}
+
 /**
  * 1. Prevents columns from collapsing when empty.
  */
 
+%grid_cell {
+  margin-right: -100%;
+      position: relative;
+    min-height: 1px; /* 1 */
+         clear: none;
+         float: left;
+         width: 100% - ($grid_gutter_width * 2);
+   margin-left: $grid_gutter_width;
+}
+
 @mixin grid-build($grid_columns, $grid_gutter_width: 1%) {
   @if type-of($grid_columns) != 'number' or round($grid_columns) != $grid_columns {
-    @warn("");
+    @warn("Not a number value: #{$grid_columns}");
   }
   @elseif type-of($grid_gutter_width) != 'number' or unit($grid_gutter_width) != '%' {
-    @warn("");
+    @warn("Not a number value: #{$grid_gutter_width}");
   }
   @else{
     $element_width:  (100% - ($grid_gutter_width * ($grid_columns + 1))) / $grid_columns;
 
-    @include grid_container;
-
-    %grid_cell {
-      margin-right: -100%;
-          position: relative;
-        min-height: 1px; /* 1 */
-             clear: none;
-             float: left;
-             width: 100% - ($grid_gutter_width * 2);
-             margin-left: $grid_gutter_width;
+    & {
+      @extend %grid_container;
     }
 
     // Cells
