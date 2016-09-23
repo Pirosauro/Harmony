@@ -1,4 +1,3 @@
 [submodule "src/vendor/Consistency"]
 	path = src/vendor/Consistency
 	url = https://github.com/Pirosauro/Consistency.git
-	branch = 1.0-alpha
